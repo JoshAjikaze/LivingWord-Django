@@ -1,0 +1,35 @@
+<footer class="border-t border-wine/10 mt-24">
+  <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14 grid gap-10 md:grid-cols-3">
+
+    <div>
+      <p class="font-display text-lg text-wine mb-2">The Living Word Library</p>
+      <p class="text-sm text-ink-muted max-w-xs">
+        Devotional books rooted in Scripture — written to help you encounter God, not just study Him.
+      </p>
+    </div>
+
+    <div>
+      <p class="eyebrow mb-4">Explore</p>
+      <ul class="space-y-2">
+        <li><a href="{% url 'books:list' %}" class="nav-link">All Books</a></li>
+        <li><a href="{% url 'core:about' %}" class="nav-link">About the Author</a></li>
+        <li><a href="{% url 'contact:contact' %}" class="nav-link">Contact &amp; Newsletter</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <p class="eyebrow mb-4">Stay Connected</p>
+      <p class="text-sm text-ink-muted mb-4 max-w-xs">
+        New releases, seasonal words, and quiet encouragement — straight to your inbox.
+      </p>
+      <a href="{% url 'contact:contact' %}#newsletter" class="btn-gold">Join the list</a>
+    </div>
+
+  </div>
+
+  <div class="border-t border-wine/10 py-6">
+    <p class="text-center text-xs text-ink-muted">
+      &copy; {% now "Y" %} The Living Word Library. All rights reserved.
+    </p>
+  </div>
+</footer>

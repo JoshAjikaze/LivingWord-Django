@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }} — The Living Word Library{% endblock %}
+{% block meta_description %}{{ book.short_description }}{% endblock %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto px-6 lg:px-10 py-20 grid lg:grid-cols-[360px_1fr] gap-16">
+
+  <div>
+    <div class="book-card__cover mb-6">
+      {% if book.cover_image %}
+        <img src="{{ book.cover_image.url }}" alt="Cover of {{ book.title }}" class="w-full h-full object-cover">
+      {% endif %}
+    </div>
+
+    {% if book.is_available %}
+      <div class="mb-6">
+        {% if book.discount_is_active %}
+          <p class="text-sm text-ink-muted line-through">${{ book.price }}</p>
+          <p class="text-2xl font-display text-wine">${{ book.display_price }}</p>
+        {% else %}
+          <p class="text-2xl font-display text-wine">${{ book.price }}</p>
+        {% endif %}
+      </div>
+
+      <div class="flex flex-col gap-3">
+        {% for link in book.buy_links.all %}
+          <a href="{{ link.url }}" target="_blank" rel="noopener" class="btn-primary justify-center">
+            Buy on {{ link.platform }}
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="btn-outline justify-center cursor-default">Currently unavailable</p>
+    {% endif %}
+
+    {% if book.sample_excerpt %}
+      <a href="{{ book.sample_excerpt.url }}" class="block mt-4 text-sm font-sans font-semibold text-wine hover:text-wine-dark">
+        Download a sample chapter &rarr;
+      </a>
+    {% endif %}
+  </div>
+
+  <div>
+    <p class="eyebrow mb-4">{{ book.author_name|default:site_settings.imprint_name }}</p>
+    <h1 class="text-4xl sm:text-5xl mb-6">{{ book.title }}</h1>
+    <p class="text-lg text-ink-muted leading-relaxed mb-10">{{ book.description|linebreaks }}</p>
+
+    {% if book.whats_inside %}
+      <h2 class="text-2xl mb-4">What you'll find inside</h2>
+      <div class="text-ink-muted leading-relaxed">{{ book.whats_inside|linebreaks }}</div>
+    {% endif %}
+  </div>
+
+</section>
+{% endblock %}

@@ -1,0 +1,51 @@
+__pycache__/
+*.py[cod]
+*.sqlite3
+.env
+/staticfiles/
+/media/
+node_modules/
+.DS_Store
+# ==========================================
+# Django & Python Core
+# ==========================================
+*.py[cod]
+*$py.class
+__pycache__/
+*.log
+local_settings.py
+
+# ==========================================
+# Databases & Environments
+# ==========================================
+db.sqlite3
+db.sqlite3-journal
+.env
+.venv
+venv/
+env/
+ENV/
+
+# ==========================================
+# Django Media & Assets
+# ==========================================
+media/
+staticfiles/
+static_root/
+
+# ==========================================
+# IDEs, Editors & OS
+# ==========================================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# ==========================================
+# Testing & Code Quality
+# ==========================================
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.mypy_cache/
