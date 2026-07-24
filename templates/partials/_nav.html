@@ -1,4 +1,4 @@
-<header class="fixed w-full border-b border-wine/10">
+<header class="border-b border-wine/10">
   <div class="max-w-7xl mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
 
     <a href="{% url 'core:home' %}" class="flex items-center gap-2 font-display text-xl text-wine">
@@ -14,16 +14,20 @@
     </nav>
 
     <!-- Mobile menu toggle -->
-    <button type="button" class="md:hidden text-wine" aria-label="Open menu" aria-expanded="false"
-      onclick="document.getElementById('mobile-nav').classList.toggle('hidden')">
+    <button
+      type="button"
+      class="md:hidden text-wine"
+      aria-label="Open menu"
+      aria-expanded="false"
+      onclick="document.getElementById('mobile-nav').classList.toggle('hidden')"
+    >
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-        <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round" />
+        <path d="M3 6h18M3 12h18M3 18h18" stroke-linecap="round"/>
       </svg>
     </button>
   </div>
 
-  <nav id="mobile-nav"
-    class="hidden md:hidden border-t border-wine/10 px-6 py-4 flex flex-col gap-4 bg-parchment-light">
+  <nav id="mobile-nav" class="hidden md:hidden border-t border-wine/10 px-6 py-4 flex flex-col gap-4 bg-parchment-light">
     <a href="{% url 'core:home' %}" class="nav-link">Home</a>
     <a href="{% url 'books:list' %}" class="nav-link">Books</a>
     <a href="{% url 'core:about' %}" class="nav-link">About</a>

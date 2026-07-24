@@ -17,6 +17,7 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 INSTALLED_APPS = [
     # Admin theme — must precede django.contrib.admin
     "unfold",
+    "unfold.contrib.filters",
 
     "django.contrib.admin",
     "django.contrib.auth",
