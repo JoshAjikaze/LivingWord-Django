@@ -1,0 +1,29 @@
+databases:
+  - name: livingword-db
+    plan: free
+    databaseName: livingword
+    user: livingword
+
+services:
+  - type: web
+    plan: free
+    name: livingword
+    runtime: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn config.wsgi:application"
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings.prod
+      - key: DATABASE_URL
+        fromDatabase:
+          name: livingword-db
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: WEB_CONCURRENCY
+        value: 4
+      - key: PYTHON_VERSION
+        value: 3.12.4
+      # Set these once R2/S3 bucket credentials exist — see DEPLOY.md.
+      - key: USE_S3
+        value: "False"
