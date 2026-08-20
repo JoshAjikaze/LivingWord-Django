@@ -25,6 +25,6 @@ fi
 "$TAILWIND_BIN" -i ./static/css/input.css -o ./static/css/output.css --minify
 
 # --- Django ---
-# python manage.py migrate
-# python manage.py seed_demo_data
+python manage.py migrate
+python manage.py seed_demo_data
 python manage.py shell -c "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.filter(name='admin').exists() or User.objects.create_superuser(name='admin', email='Josh@admin.com', password='User!12345')"
