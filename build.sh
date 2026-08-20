@@ -3,6 +3,9 @@
 set -o errexit
 
 pip install -r requirements.txt
+npm install
+npm run build:css
+
 
 # --- Compile Tailwind CSS ---
 # Render's Python runtime has no Node.js, so we use Tailwind's standalone
@@ -22,5 +25,6 @@ fi
 "$TAILWIND_BIN" -i ./static/css/input.css -o ./static/css/output.css --minify
 
 # --- Django ---
-python manage.py collectstatic --no-input
 python manage.py migrate
+python manage.py seed_demo_data
+# python manage.py runserver
