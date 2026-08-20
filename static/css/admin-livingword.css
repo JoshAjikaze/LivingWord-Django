@@ -1,0 +1,106 @@
+/* LivingWord Library — Unfold admin skin */
+:root {
+  --lw-wine: #5a1b1e;
+  --lw-wine-dark: #411214;
+  --lw-gold: #b28a45;
+  --lw-gold-soft: #d8bd83;
+  --lw-parchment: #faf6ee;
+  --lw-paper: #fffdf8;
+  --lw-ink: #2b231e;
+  --lw-muted: #766a60;
+  --lw-line: #e6d8c2;
+}
+
+html.dark {
+  --lw-parchment: #201b18;
+  --lw-paper: #2b2420;
+  --lw-ink: #f5ecdf;
+  --lw-muted: #c6b8a8;
+  --lw-line: #53463b;
+}
+
+body {
+  background: var(--lw-parchment) !important;
+  color: var(--lw-ink) !important;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+h1, h2, h3, h4, .font-serif {
+  font-family: Georgia, 'Times New Roman', serif !important;
+  letter-spacing: -.02em;
+}
+
+/* Unfold's sidebar becomes the Library's wine spine in both themes. */
+nav[aria-label="Sidebar"], aside {
+  background: linear-gradient(180deg, var(--lw-wine-dark), var(--lw-wine)) !important;
+}
+nav[aria-label="Sidebar"] a, aside a {
+  color: #f7eddf !important;
+}
+nav[aria-label="Sidebar"] a:hover, aside a:hover,
+nav[aria-label="Sidebar"] a[aria-current="page"], aside a[aria-current="page"] {
+  background: rgba(216, 189, 131, .16) !important;
+  color: #fff7e7 !important;
+}
+
+/* Content cards and form surfaces. */
+main, .bg-gray-50 {
+  background: var(--lw-parchment) !important;
+}
+.dark\\:bg-gray-900 {
+  background: var(--lw-parchment) !important;
+}
+.bg-white {
+  background: var(--lw-paper) !important;
+  border-color: var(--lw-line) !important;
+  box-shadow: 0 12px 30px rgba(90, 27, 30, .06) !important;
+}
+.dark\\:bg-gray-800 {
+  background: var(--lw-paper) !important;
+  border-color: var(--lw-line) !important;
+}
+
+input, textarea, select {
+  border-color: var(--lw-line) !important;
+  background: #fffefa !important;
+  color: var(--lw-ink) !important;
+  border-radius: .45rem !important;
+}
+html.dark input, html.dark textarea, html.dark select {
+  background: #342b26 !important;
+}
+input:focus, textarea:focus, select:focus {
+  border-color: var(--lw-gold) !important;
+  box-shadow: 0 0 0 3px rgba(178, 138, 69, .18) !important;
+}
+
+button[type="submit"], input[type="submit"], .bg-primary-600 {
+  background: var(--lw-wine) !important;
+}
+button[type="submit"]:hover, input[type="submit"]:hover, .bg-primary-700 {
+  background: var(--lw-wine-dark) !important;
+}
+
+th {
+  color: var(--lw-wine) !important;
+  font-family: Georgia, 'Times New Roman', serif !important;
+  letter-spacing: .02em;
+}
+html.dark th { color: var(--lw-gold-soft) !important; }
+
+a { color: var(--lw-wine) !important; }
+a:hover { color: var(--lw-gold) !important; }
+html.dark a { color: var(--lw-gold-soft) !important; }
+html.dark a:hover { color: #f5d99a !important; }
+
+/* Gold rule gives the dashboard the same editorial rhythm as the storefront. */
+header h1::after {
+  content: '';
+  display: block;
+  width: 3.5rem;
+  height: 2px;
+  margin-top: .65rem;
+  background: var(--lw-gold);
+}
+
+.lw-status-completed { color: #2f6b43; }

@@ -1,0 +1,65 @@
+{% extends "account/_auth_base.html" %}
+{% load static %}
+
+{% block title %}Sign in — The Living Word Library{% endblock %}
+
+{% block auth_card %}
+  <div class="auth-card">
+    <p class="eyebrow mb-3">Welcome back</p>
+    <h1 class="text-3xl sm:text-4xl mb-2 lg:hidden">Welcome back.</h1>
+    <p class="text-sm font-sans text-ink-muted mb-8">
+      New here?
+      <a href="{% url 'account_signup' %}" class="text-wine font-semibold underline underline-offset-2">Create an account</a>
+    </p>
+
+    <form method="post" action="{% url 'account_login' %}" class="flex flex-col gap-5">
+      {% csrf_token %}
+
+      <div>
+        <label for="id_login" class="auth-label">Email address</label>
+        <input type="email" name="login" id="id_login" class="auth-field" placeholder="name@example.com"
+               value="{{ form.login.value|default:'' }}" autocomplete="email" required>
+        {% for error in form.login.errors %}
+          <ul class="auth-errorlist mt-2"><li>{{ error }}</li></ul>
+        {% endfor %}
+      </div>
+
+      <div>
+        <label for="id_password" class="auth-label">Password</label>
+        <input type="password" name="password" id="id_password" class="auth-field" placeholder="Your password"
+               autocomplete="current-password" required>
+        {% for error in form.password.errors %}
+          <ul class="auth-errorlist mt-2"><li>{{ error }}</li></ul>
+        {% endfor %}
+      </div>
+
+      <div class="flex items-center gap-3">
+        <input type="checkbox" name="remember" id="id_remember" value="1"
+               class="h-4 w-4 accent-[#5A1B1E]">
+        <label for="id_remember" class="text-sm font-sans text-ink-muted">Keep me signed in</label>
+      </div>
+
+      {% if form.non_field_errors %}
+        <ul class="auth-errorlist">
+          {% for error in form.non_field_errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+
+      <button type="submit" class="btn-primary justify-center">Sign in</button>
+
+      <div class="text-center">
+        <a href="{% url 'account_reset_password' %}" class="text-sm font-sans text-wine hover:text-wine-dark underline underline-offset-2">
+          Forgot your password?
+        </a>
+      </div>
+    </form>
+
+    {% if messages %}
+      <div class="mt-6">
+        {% for message in messages %}<p class="text-sm font-sans text-wine">{{ message }}</p>{% endfor %}
+      </div>
+    {% endif %}
+
+    {% include "account/_social_login.html" %}
+  </div>
+{% endblock %}

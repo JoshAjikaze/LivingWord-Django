@@ -3,7 +3,9 @@ Base settings — shared across dev and prod.
 Environment-specific overrides live in dev.py / prod.py.
 """
 from pathlib import Path
+
 import environ
+from django.templatetags.static import static
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -13,6 +15,7 @@ environ.Env.read_env(BASE_DIR / ".env")
 SECRET_KEY = env("DJANGO_SECRET_KEY", default="dev-insecure-key-change-me")
 DEBUG = env.bool("DEBUG", default=False)
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
+PUBLIC_SITE_URL = env("PUBLIC_SITE_URL", default="http://localhost:8000")
 
 INSTALLED_APPS = [
     # Admin theme — must precede django.contrib.admin
@@ -25,6 +28,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     "django.contrib.sitemaps",
 
     # Third-party
@@ -33,9 +37,18 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_tailwind",
 
+    # Authentication
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.facebook",
+
     # Local apps
+    "apps.accounts",
     "apps.core",
     "apps.books",
+    "apps.payments",
     "apps.newsletter",
     "apps.contact",
 ]
@@ -47,6 +60,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -65,6 +79,7 @@ TEMPLATES = [
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
                 "apps.core.context_processors.site_settings",
+                "apps.payments.context_processors.paypal",
             ],
         },
     },
@@ -75,6 +90,37 @@ WSGI_APPLICATION = "config.wsgi.application"
 DATABASES = {
     "default": env.db("DATABASE_URL", default="sqlite:///" + str(BASE_DIR / "db.sqlite3")),
 }
+
+# --- django-allauth ---
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    # allauth's own backend — required for email login & social auth
+    "allauth.account.auth_backends.AuthenticationBackend",
+    "django.contrib.auth.backends.ModelBackend",
+]
+
+ACCOUNT_LOGIN_METHODS = {"email"}
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
+ACCOUNT_FORMS = {"signup": "apps.accounts.forms.SignupForm"}
+ACCOUNT_UNIQUE_EMAIL = True
+# Temporary policy: do not require email verification during signup/login.
+# Change to "mandatory" when SMTP and the production verification flow are ready.
+ACCOUNT_EMAIL_VERIFICATION = "none"  # "mandatory" re-enables verification gates.
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[LivingWord Library] "
+ACCOUNT_ADAPTER = "apps.accounts.adapters.CustomAccountAdapter"
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+ACCOUNT_USER_MODEL_EMAIL_FIELD = "email"
+
+LOGIN_URL = "account_login"
+LOGIN_REDIRECT_URL = "account:profile"
+LOGOUT_REDIRECT_URL = "core:home"
+ACCOUNT_SIGNUP_REDIRECT_URL = "account:profile"
+ACCOUNT_PASSWORD_RESET_REDIRECT_URL = "account_login"
+
+SOCIALACCOUNT_LOGIN_ON_GET = False
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -95,6 +141,14 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# --- PayPal ---
+# Use https://api-m.sandbox.paypal.com during development and
+# https://api-m.paypal.com in production. Keep secrets in .env.
+PAYPAL_BASE_URL = env("PAYPAL_BASE_URL", default="https://api-m.sandbox.paypal.com")
+PAYPAL_CLIENT_ID = env("PAYPAL_CLIENT_ID", default="")
+PAYPAL_CLIENT_SECRET = env("PAYPAL_CLIENT_SECRET", default="")
+PAYPAL_WEBHOOK_ID = env("PAYPAL_WEBHOOK_ID", default="")
+
 # Django 5.2's STORAGES dict is the setting that's actually respected —
 # the legacy STATICFILES_STORAGE setting does NOT reliably activate a
 # custom staticfiles backend on its own.
@@ -108,6 +162,8 @@ STORAGES = {
 }
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "accounts.User"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
 CRISPY_TEMPLATE_PACK = "tailwind"
@@ -133,9 +189,48 @@ UNFOLD = {
     "SITE_TITLE": "The Living Word Library — Admin",
     "SITE_HEADER": "The Living Word Library",
     "SITE_SYMBOL": "auto_stories",
+    "SITE_LOGO": {
+        "light": lambda request: static("images/livingword-logo.png"),
+        "dark": lambda request: static("images/livingword-logo.png"),
+    },
+    "THEME": "auto",
     "COLORS": {
         "primary": {
-            "500": "90 27 30",  # wine, as RGB for Unfold's CSS var format
+            "50": "250 246 238",
+            "100": "242 231 213",
+            "500": "90 27 30",  # wine
+            "600": "65 18 20",
+            "700": "48 13 15",
         },
+        "base": {
+            "50": "250 246 238",
+            "100": "244 236 223",
+            "200": "232 217 195",
+            "800": "43 35 30",
+            "900": "33 27 23",
+        },
+    },
+    "STYLES": [lambda request: static("css/admin-livingword.css")],
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": False,
+        "navigation": [
+            {
+                "title": "Library",
+                "separator": True,
+                "items": [
+                    {"title": "Books", "icon": "menu_book", "link": "/admin/books/book/"},
+                    {"title": "Orders", "icon": "payments", "link": "/admin/payments/order/"},
+                    {"title": "PayPal webhooks", "icon": "webhook", "link": "/admin/payments/paypalwebhookevent/"},
+                ],
+            },
+            {
+                "title": "Accounts & content",
+                "items": [
+                    {"title": "Users", "icon": "group", "link": "/admin/accounts/user/"},
+                    {"title": "Site settings", "icon": "tune", "link": "/admin/core/sitesettings/"},
+                ],
+            },
+        ],
     },
 }

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}My account — The Living Word Library{% endblock %}
+
+{% block content %}
+<section class="max-w-4xl mx-auto px-6 lg:px-10 py-16">
+  <p class="eyebrow mb-4">My account</p>
+  <h1 class="text-4xl sm:text-5xl mb-2">Welcome back, {{ user.name|default:user.email }}</h1>
+
+  {% if not user.emailaddress_set.first.verified %}
+    <div class="mt-4 mb-8 border border-gold-dark/30 bg-gold/10 rounded px-4 py-3 flex items-start gap-3 max-w-2xl">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A8721E" stroke-width="1.5" class="mt-0.5 shrink-0">
+        <circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16v.01" stroke-linecap="round"/>
+      </svg>
+      <div class="text-sm font-sans">
+        Your email address is not verified yet.
+        <a href="{% url 'account_email' %}" class="text-wine font-semibold underline underline-offset-2">Resend the verification email</a>
+        to unlock purchases and downloads.
+      </div>
+    </div>
+  {% endif %}
+
+  {% if messages %}
+    <div class="mb-8">
+      {% for message in messages %}<p class="text-sm font-sans text-wine">{{ message }}</p>{% endfor %}
+    </div>
+  {% endif %}
+
+  <!-- Account summary -->
+  <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+    <div class="auth-card">
+      <p class="eyebrow mb-3">Signed in as</p>
+      <p class="font-sans text-sm text-ink-muted break-all">{{ user.email }}</p>
+      <p class="font-sans text-xs text-ink-muted mt-4">Member since {{ user.date_joined|date:"F j, Y" }}</p>
+    </div>
+
+    <div class="auth-card">
+      <p class="eyebrow mb-3">Account type</p>
+      <p class="font-sans text-sm text-ink-muted capitalize">{{ user.get_role_display }}</p>
+      {% if user.emailaddress_set.first.verified %}
+        <p class="font-sans text-xs text-ink-muted mt-4">Email verified — full access enabled</p>
+      {% else %}
+        <p class="font-sans text-xs text-ink-muted mt-4">Email pending verification</p>
+      {% endif %}
+    </div>
+
+    <div class="auth-card">
+      <p class="eyebrow mb-3">Account settings</p>
+      <ul class="space-y-2">
+        <li><a href="{% url 'account_email' %}" class="nav-link text-wine font-semibold">Manage email addresses</a></li>
+        <li><a href="{% url 'account_change_password' %}" class="nav-link text-wine font-semibold">Change password</a></li>
+        <li><a href="{% url 'account_reset_password' %}" class="nav-link text-wine font-semibold">Forgot password</a></li>
+        <li><a href="{% url 'account_logout' %}" class="nav-link text-wine font-semibold">Sign out</a></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Orders (placeholder until the Order model lands in the next phase) -->
+  <div class="mt-12 border-t border-wine/10 pt-10">
+    <h2 class="text-2xl mb-4">My purchases</h2>
+    {% if orders %}
+      <div class="flex flex-col gap-3">
+        {% for order in orders %}
+          <div class="auth-card !p-5 flex items-center justify-between gap-4">
+            <span class="font-sans text-sm">{{ order }}</span>
+            <span class="font-sans text-xs text-ink-muted">{{ order.created_at|date:"M j, Y" }}</span>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-ink-muted font-sans text-sm mb-6">No purchases yet — the library is full of good company.</p>
+      <a href="{% url 'books:list' %}" class="btn-gold">
+        Browse the books
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

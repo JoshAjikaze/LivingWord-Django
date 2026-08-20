@@ -1,8 +1,9 @@
-<footer class="border-t border-wine/10 mt-24 hidden">
+{% load static %}
+<footer class="border-t border-wine/10 mt-24">
   <div class="max-w-7xl mx-auto px-6 lg:px-10 py-14 grid gap-10 md:grid-cols-3">
 
     <div>
-      <p class="font-display text-lg text-wine mb-2">The Living Word Library</p>
+      <img src="{% static 'images/livingword-logo.png' %}" alt="The Living Word Library — Scripture for Generations" class="livingword-logo livingword-logo--footer mb-4">
       <p class="text-sm text-ink-muted max-w-xs">
         Devotional books rooted in Scripture — written to help you encounter God, not just study Him.
       </p>

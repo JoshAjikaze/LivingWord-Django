@@ -12,10 +12,13 @@ sitemaps = {
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("accounts/", include("allauth.urls")),
+    path("accounts/", include("apps.accounts.urls")),
     path("", include("apps.core.urls")),
     path("books/", include("apps.books.urls")),
     path("newsletter/", include("apps.newsletter.urls")),
     path("contact/", include("apps.contact.urls")),
+    path("payments/", include("apps.payments.urls")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
 ]
 

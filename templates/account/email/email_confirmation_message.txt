@@ -1,0 +1,16 @@
+{% extends "account/email/base_message.txt" %}
+{% load i18n %}
+{% block content %}{% autoescape off %}Welcome to The Living Word Library —
+
+Someone (we hope it was you) used this email address to register an account.
+To confirm it's really you and unlock purchases, downloads, and your reading
+library, open the link below in your browser:
+
+{{ activate_url }}
+
+If you didn't create this account, simply ignore this email — no account will
+be activated without your confirmation.
+
+With grace,
+The Living Word Library
+{% endautoescape %}{% endblock content %}

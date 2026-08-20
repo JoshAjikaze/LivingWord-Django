@@ -5,3 +5,9 @@ ALLOWED_HOSTS = ["*"]
 
 # Faster local iteration: serve media locally regardless of USE_S3
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# Use plain staticfiles storage in dev/tests — the prod whitenoise manifest
+# backend raises MissingStaticFileError when collectstatic hasn't run.
+STORAGES["staticfiles"] = {
+    "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+}

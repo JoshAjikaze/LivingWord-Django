@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Sign out — The Living Word Library{% endblock %}
+
+{% block content %}
+<section class="max-w-2xl mx-auto px-6 lg:px-10 py-20 text-center">
+  <div class="auth-card text-center">
+    <p class="eyebrow justify-center mb-3">Goodbye for now</p>
+    <h1 class="text-3xl sm:text-4xl mb-4">Sign out of your account?</h1>
+    <p class="text-ink-muted leading-relaxed mb-8 max-w-md mx-auto">
+      You'll need to sign in again to access your purchases and downloads. We'll see you
+      back in the library soon.
+    </p>
+
+    <form method="post" action="{% url 'account_logout' %}">
+      {% csrf_token %}
+      {{ redirect_field }}
+      <div class="flex gap-3 justify-center">
+        <a href="{% url 'core:home' %}" class="btn-outline">Keep browsing</a>
+        <button type="submit" class="btn-primary">Sign out</button>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

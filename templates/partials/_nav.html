@@ -1,9 +1,9 @@
+{% load static %}
 <header class="border-b border-wine/10">
   <div class="max-w-7xl mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
 
-    <a href="{% url 'core:home' %}" class="flex items-center gap-2 font-display text-xl text-wine">
-      <span class="w-1.5 h-1.5 rounded-full bg-gold"></span>
-      The Living Word Library
+    <a href="{% url 'core:home' %}" class="flex items-center" aria-label="The Living Word Library home">
+      <img src="{% static 'images/livingword-logo.png' %}" alt="The Living Word Library — Scripture for Generations" class="livingword-logo livingword-logo--nav">
     </a>
 
     <nav class="hidden md:flex items-center gap-8">
@@ -12,6 +12,21 @@
       <a href="{% url 'core:about' %}" class="nav-link">About</a>
       <a href="{% url 'contact:contact' %}" class="nav-link">Contact</a>
     </nav>
+
+    <!-- Account actions -->
+    <div class="hidden md:flex items-center gap-3">
+      {% if user.is_authenticated %}
+        <span class="text-sm font-sans text-ink-muted max-w-40 truncate">Hello, {{ user.name|default:user.email }}</span>
+        <a href="{% url 'account:profile' %}" class="btn-outline !py-2 !px-4">My account</a>
+        {% if user.is_admin or user.is_staff %}
+          <a href="{% url 'admin:index' %}" class="btn-gold !py-2 !px-4">Admin</a>
+        {% endif %}
+        <a href="{% url 'account_logout' %}" class="nav-link !text-wine font-semibold">Log out</a>
+      {% else %}
+        <a href="{% url 'account_login' %}" class="btn-outline !py-2 !px-4">Sign in</a>
+        <a href="{% url 'account_signup' %}" class="btn-gold !py-2 !px-4">Create account</a>
+      {% endif %}
+    </div>
 
     <!-- Mobile menu toggle -->
     <button
@@ -32,5 +47,19 @@
     <a href="{% url 'books:list' %}" class="nav-link">Books</a>
     <a href="{% url 'core:about' %}" class="nav-link">About</a>
     <a href="{% url 'contact:contact' %}" class="nav-link">Contact</a>
+
+    <div class="border-t border-wine/10 pt-4 flex flex-col gap-3">
+      {% if user.is_authenticated %}
+        <span class="text-sm font-sans text-ink-muted">Signed in as {{ user.name|default:user.email }}</span>
+        <a href="{% url 'account:profile' %}" class="nav-link">My account</a>
+        {% if user.is_admin or user.is_staff %}
+          <a href="{% url 'admin:index' %}" class="nav-link">Admin panel</a>
+        {% endif %}
+        <a href="{% url 'account_logout' %}" class="nav-link text-wine font-semibold">Log out</a>
+      {% else %}
+        <a href="{% url 'account_login' %}" class="btn-outline !py-2 justify-center">Sign in</a>
+        <a href="{% url 'account_signup' %}" class="btn-gold !py-2 justify-center">Create account</a>
+      {% endif %}
+    </div>
   </nav>
 </header>

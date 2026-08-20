@@ -2,6 +2,12 @@
 {% block title %}{{ book.title }} — The Living Word Library{% endblock %}
 {% block meta_description %}{{ book.short_description }}{% endblock %}
 
+{% block extra_head %}
+  {% if PAYPAL_CLIENT_ID and book.is_available and user.is_authenticated %}
+    <script src="https://www.paypal.com/sdk/js?client-id={{ PAYPAL_CLIENT_ID|urlencode }}&currency=USD"></script>
+  {% endif %}
+{% endblock %}
+
 {% block content %}
 <section class="max-w-6xl mx-auto px-6 lg:px-10 py-20 grid lg:grid-cols-[360px_1fr] gap-16">
 
@@ -28,6 +34,49 @@
             Buy on {{ link.platform }}
           </a>
         {% endfor %}
+        {% if PAYPAL_CLIENT_ID and user.is_authenticated %}
+          <div class="mt-5 rounded-lg border border-[#e6d8c2] bg-[#fffdf8] p-4">
+            <p class="eyebrow mb-2">Direct checkout</p>
+            <div id="paypal-button-container"></div>
+            <p id="paypal-error" class="mt-3 hidden text-sm text-red-800"></p>
+          </div>
+          <script>
+            function getCookie(name) {
+              const value = `; ${document.cookie}`;
+              const parts = value.split(`; ${name}=`);
+              return parts.length === 2 ? parts.pop().split(';').shift() : '';
+            }
+            paypal.Buttons({
+              createOrder() {
+                return fetch("{% url 'payments:paypal_create' book.slug %}", {
+                  method: "POST",
+                  headers: {"X-CSRFToken": getCookie("csrftoken")}
+                }).then(response => response.json()).then(data => {
+                  if (data.error) throw new Error(data.error);
+                  return data.order_id;
+                });
+              },
+              onApprove(data) {
+                return fetch(`/payments/paypal/capture/${data.orderID}/`, {
+                  method: "POST",
+                  headers: {"X-CSRFToken": getCookie("csrftoken")}
+                }).then(response => response.json()).then(result => {
+                  if (result.status !== "completed") throw new Error("Payment capture is still pending.");
+                  window.location.href = "{% url 'account:profile' %}";
+                });
+              },
+              onError(error) {
+                const node = document.getElementById("paypal-error");
+                node.textContent = error.message || "PayPal checkout could not be started.";
+                node.classList.remove("hidden");
+              }
+            }).render("#paypal-button-container");
+          </script>
+        {% elif not user.is_authenticated %}
+          <a href="{% url 'account_login' %}?next={{ request.path|urlencode }}" class="btn-outline justify-center mt-3">
+            Sign in to buy the PDF
+          </a>
+        {% endif %}
       </div>
     {% else %}
       <p class="btn-outline justify-center cursor-default">Currently unavailable</p>
@@ -44,6 +93,16 @@
     <p class="eyebrow mb-4">{{ book.author_name|default:site_settings.imprint_name }}</p>
     <h1 class="text-4xl sm:text-5xl mb-6">{{ book.title }}</h1>
     <p class="text-lg text-ink-muted leading-relaxed mb-10">{{ book.description|linebreaks }}</p>
+
+    {% if book.qr_code %}
+      <aside class="book-qr-card" aria-labelledby="book-qr-title">
+        <p class="eyebrow mb-3">Share this book</p>
+        <h2 id="book-qr-title" class="text-2xl mb-3">Scan to revisit this page</h2>
+        <img src="{{ book.qr_code.url }}" alt="QR code linking to {{ book.title }}" class="book-qr-card__image">
+        <p class="mt-4 text-xs text-ink-muted break-all">{{ book.qr_target_url }}</p>
+        <a href="{{ book.qr_code.url }}" download="{{ book.slug }}-qr.png" class="btn-outline mt-4 !py-2 !px-4">Download QR code</a>
+      </aside>
+    {% endif %}
 
     {% if book.whats_inside %}
       <h2 class="text-2xl mb-4">What you'll find inside</h2>

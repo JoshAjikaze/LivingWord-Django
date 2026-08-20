@@ -1,5 +1,10 @@
 from decimal import Decimal
+from io import BytesIO
 
+import qrcode
+from django.conf import settings
+from django.core.files.base import ContentFile
+from django.core.validators import FileExtensionValidator, MaxValueValidator, MinValueValidator
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -19,7 +24,13 @@ class Book(models.Model):
         blank=True,
         help_text="Display name on the book page. Leave blank to use the site's Author Profile name.",
     )
-
+    isbn = models.CharField(
+        max_length=20,
+        blank=True,
+        default="",
+        verbose_name="ISBN",
+        help_text="Optional ISBN-10 or ISBN-13 identifier.",
+    )
     short_description = models.CharField(
         max_length=160,
         help_text="One line shown on the homepage and books grid cards.",
@@ -29,25 +40,42 @@ class Book(models.Model):
         blank=True,
         help_text="'What you'll find inside' section on the book page.",
     )
-
     cover_image = models.ImageField(upload_to="covers/")
+    ebook_file = models.FileField(
+        upload_to="ebooks/",
+        blank=True,
+        help_text="Full paid ebook file. Accepts PDF or EPUB. Keep this file protected in production.",
+        validators=[FileExtensionValidator(allowed_extensions=["pdf", "epub"])],
+    )
     sample_excerpt = models.FileField(
         upload_to="samples/",
         blank=True,
-        help_text="Optional sample chapter/excerpt (PDF/EPUB) offered on the book page.",
+        help_text="Optional public sample chapter/excerpt. Accepts PDF or EPUB.",
+        validators=[FileExtensionValidator(allowed_extensions=["pdf", "epub"])],
     )
-
+    qr_code = models.ImageField(
+        upload_to="qr_codes/",
+        blank=True,
+        editable=False,
+        help_text="Automatically generated QR code for this book's public detail page.",
+    )
     price = models.DecimalField(max_digits=8, decimal_places=2, default=Decimal("0.00"))
     discount_percent = models.PositiveSmallIntegerField(
-        default=0, help_text="0–100. Applied to price while discount_active_until is in the future."
+        default=0,
+        validators=[MinValueValidator(0), MaxValueValidator(100)],
+        help_text="0–100. Applied to price while discount_active_until is in the future.",
     )
     discount_active_until = models.DateTimeField(
         null=True, blank=True, help_text="Discount stops applying automatically after this date."
     )
-
+    amazon_store_url = models.URLField(
+        blank=True,
+        default="",
+        verbose_name="Amazon store URL",
+        help_text="Optional outbound Amazon listing URL shown on the book detail page.",
+    )
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.DRAFT)
     published_at = models.DateTimeField(null=True, blank=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -59,6 +87,36 @@ class Book(models.Model):
 
     def get_absolute_url(self):
         return reverse("books:detail", args=[self.slug])
+
+    @property
+    def qr_target_url(self):
+        """Absolute URL encoded in the QR code."""
+        base_url = getattr(settings, "PUBLIC_SITE_URL", "http://localhost:8000").rstrip("/")
+        return f"{base_url}{self.get_absolute_url()}"
+
+    def generate_qr_code(self):
+        """Create or replace the QR image for the current public book URL."""
+        qr = qrcode.QRCode(
+            version=None,
+            error_correction=qrcode.constants.ERROR_CORRECT_M,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(self.qr_target_url)
+        qr.make(fit=True)
+        image = qr.make_image(fill_color="#5a1b1e", back_color="white")
+
+        output = BytesIO()
+        image.save(output, format="PNG")
+        if self.qr_code:
+            self.qr_code.delete(save=False)
+        filename = f"book-{self.pk}.png"
+        self.qr_code.save(filename, ContentFile(output.getvalue()), save=False)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.generate_qr_code()
+        super().save(update_fields=["qr_code", "updated_at"])
 
     @property
     def discount_is_active(self):

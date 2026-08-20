@@ -46,4 +46,72 @@
   .book-card__cover {
     @apply aspect-[3/4.4] rounded-sm shadow-[0_18px_35px_-15px_rgba(90,27,30,0.35)] overflow-hidden bg-parchment-deep;
   }
+
+  /* --- Auth forms (login / signup / reset / verification) --- */
+  .auth-card {
+    @apply bg-parchment-light border border-wine/10 rounded-lg shadow-[0_24px_48px_-24px_rgba(90,27,30,0.25)] p-8 sm:p-10;
+  }
+  .auth-field {
+    @apply w-full px-4 py-3 rounded border border-wine/20 bg-parchment font-sans text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:border-gold-dark focus:ring-2 focus:ring-gold/30 transition-colors duration-150;
+  }
+  .auth-label {
+    @apply block text-xs font-sans font-semibold tracking-wide uppercase text-ink-muted mb-2;
+  }
+  .auth-errorlist {
+    @apply space-y-1 mb-4;
+  }
+  .auth-errorlist li {
+    @apply text-sm font-sans text-wine bg-wine/5 border border-wine/10 rounded px-3 py-2;
+  }
+  .auth-hint {
+    @apply text-xs font-sans text-ink-muted mt-1.5 leading-relaxed;
+  }
+
+  /* Social auth buttons */
+  .social-btn {
+    @apply w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded border font-sans text-sm font-semibold transition-colors duration-200;
+  }
+  .social-btn--google {
+    @apply social-btn border-wine/20 bg-parchment-light text-wine hover:bg-wine/5;
+  }
+  .social-btn--facebook {
+    @apply social-btn bg-indigo_accent text-white hover:bg-[#16294A] border-transparent;
+  }
+  .social-btn svg {
+    @apply h-4 w-4 shrink-0;
+  }
+
+  /* Django messages (allauth flash messages) */
+  ul.messagelist {
+    @apply space-y-2 mb-6;
+  }
+  ul.messagelist li {
+    @apply text-sm font-sans font-semibold text-wine bg-wine/5 border border-wine/10 rounded px-3 py-2;
+  }
+  ul.messagelist li.success {
+    @apply text-[#3F5C38] bg-[#3F5C38]/5 border-[#3F5C38]/15;
+  }
+}
+
+
+@layer components {
+  .livingword-logo {
+    @apply block object-contain mix-blend-multiply;
+  }
+  .livingword-logo--nav {
+    @apply w-36 sm:w-44 h-14;
+  }
+  .livingword-logo--footer {
+    @apply w-52 h-24 object-left;
+  }
+  .livingword-logo--auth {
+    @apply w-64 h-36 object-left;
+  }
+  .book-qr-card {
+    @apply mt-10 rounded-lg border border-wine/10 bg-parchment-light p-6 text-center;
+  }
+  .book-qr-card__image {
+    @apply mx-auto w-44 h-44 rounded bg-white p-2 shadow-sm;
+    image-rendering: pixelated;
+  }
 }

@@ -1,0 +1,53 @@
+{% extends "account/_auth_base.html" %}
+{% load allauth %}
+
+{% block title %}Email addresses — The Living Word Library{% endblock %}
+
+{% block auth_card %}
+  <div class="auth-card">
+    <p class="eyebrow mb-3">Email addresses</p>
+    <h1 class="text-3xl sm:text-4xl mb-2 lg:hidden">Manage your emails.</h1>
+    <p class="text-sm font-sans text-ink-muted mb-8">
+      Your verified email receives purchase receipts and download links.
+      <a href="{% url 'account:profile' %}" class="text-wine font-semibold underline underline-offset-2">Back to my account</a>
+    </p>
+
+    {% if can_add_email %}
+      <form method="post" action="{% url 'account_email' %}" class="flex gap-3 mb-8">
+        {% csrf_token %}
+        <input type="email" name="email" class="auth-field" placeholder="Add another email address" autocomplete="email">
+        <button type="submit" name="action_add" class="btn-gold whitespace-nowrap">Add</button>
+      </form>
+    {% endif %}
+
+    <form method="post" action="{% url 'account_email' %}" class="flex flex-col gap-4">
+      {% csrf_token %}
+
+      {% for emailaddress in emailaddresses %}
+        <label class="flex items-center gap-3 border border-wine/10 rounded px-4 py-3 bg-parchment">
+          <input type="radio" name="email" value="{{ emailaddress.email }}"
+                 {% if emailaddress.primary %}checked{% endif %}
+                 class="h-4 w-4 accent-[#5A1B1E]">
+          <span class="font-sans text-sm flex-1 break-all">{{ emailaddress.email }}</span>
+          {% if emailaddress.verified %}
+            <span class="text-xs font-sans font-semibold text-[#3F5C38] border border-[#3F5C38]/20 rounded-full px-2.5 py-0.5">Verified</span>
+          {% else %}
+            <span class="text-xs font-sans font-semibold text-gold-dark border border-gold-dark/30 rounded-full px-2.5 py-0.5">Unverified</span>
+            <button type="submit" name="action_send" value="{{ emailaddress.email }}"
+                    class="text-xs font-sans font-semibold text-wine underline underline-offset-2">Resend</button>
+          {% endif %}
+          {% if not emailaddress.primary %}
+            <button type="submit" name="action_remove" value="{{ emailaddress.email }}"
+                    class="text-xs font-sans font-semibold text-wine hover:text-wine-dark underline underline-offset-2">Remove</button>
+          {% endif %}
+        </label>
+      {% empty %}
+        <p class="text-sm font-sans text-ink-muted">No email addresses yet.</p>
+      {% endfor %}
+
+      {% if can_set_primary %}
+        <button type="submit" name="action_primary" class="btn-outline self-start mt-2">Make selected primary</button>
+      {% endif %}
+    </form>
+  </div>
+{% endblock %}
