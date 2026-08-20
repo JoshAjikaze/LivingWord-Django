@@ -19,6 +19,7 @@ urlpatterns = [
     path("newsletter/", include("apps.newsletter.urls")),
     path("contact/", include("apps.contact.urls")),
     path("payments/", include("apps.payments.urls")),
+    path("social/", include("apps.social.urls")),
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="django.contrib.sitemaps.views.sitemap"),
 ]
 

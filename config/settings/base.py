@@ -16,6 +16,18 @@ SECRET_KEY = env("DJANGO_SECRET_KEY", default="dev-insecure-key-change-me")
 DEBUG = env.bool("DEBUG", default=False)
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 PUBLIC_SITE_URL = env("PUBLIC_SITE_URL", default="http://localhost:8000")
+SOCIAL_TOKEN_ENCRYPTION_KEY = env("SOCIAL_TOKEN_ENCRYPTION_KEY", default="")
+SOCIAL_OAUTH_REDIRECT_BASE = env("SOCIAL_OAUTH_REDIRECT_BASE", default="")
+SOCIAL_FACEBOOK_CLIENT_ID = env("SOCIAL_FACEBOOK_CLIENT_ID", default="")
+SOCIAL_FACEBOOK_CLIENT_SECRET = env("SOCIAL_FACEBOOK_CLIENT_SECRET", default="")
+SOCIAL_INSTAGRAM_CLIENT_ID = env("SOCIAL_INSTAGRAM_CLIENT_ID", default="")
+SOCIAL_INSTAGRAM_CLIENT_SECRET = env("SOCIAL_INSTAGRAM_CLIENT_SECRET", default="")
+SOCIAL_THREADS_CLIENT_ID = env("SOCIAL_THREADS_CLIENT_ID", default="")
+SOCIAL_THREADS_CLIENT_SECRET = env("SOCIAL_THREADS_CLIENT_SECRET", default="")
+SOCIAL_YOUTUBE_CLIENT_ID = env("SOCIAL_YOUTUBE_CLIENT_ID", default="")
+SOCIAL_YOUTUBE_CLIENT_SECRET = env("SOCIAL_YOUTUBE_CLIENT_SECRET", default="")
+SOCIAL_X_CLIENT_ID = env("SOCIAL_X_CLIENT_ID", default="")
+SOCIAL_X_CLIENT_SECRET = env("SOCIAL_X_CLIENT_SECRET", default="")
 
 INSTALLED_APPS = [
     # Admin theme — must precede django.contrib.admin
@@ -49,6 +61,7 @@ INSTALLED_APPS = [
     "apps.core",
     "apps.books",
     "apps.payments",
+    "apps.social",
     "apps.newsletter",
     "apps.contact",
 ]
@@ -106,7 +119,7 @@ ACCOUNT_FORMS = {"signup": "apps.accounts.forms.SignupForm"}
 ACCOUNT_UNIQUE_EMAIL = True
 # Temporary policy: do not require email verification during signup/login.
 # Change to "mandatory" when SMTP and the production verification flow are ready.
-ACCOUNT_EMAIL_VERIFICATION = "none"  # "mandatory" re-enables verification gates.
+ACCOUNT_EMAIL_VERIFICATION = env("ACCOUNT_EMAIL_VERIFICATION", default="none")
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[LivingWord Library] "
 ACCOUNT_ADAPTER = "apps.accounts.adapters.CustomAccountAdapter"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
