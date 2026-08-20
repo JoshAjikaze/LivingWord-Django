@@ -2,16 +2,43 @@
 {% block title %}About the Author — The Living Word Library{% endblock %}
 
 {% block content %}
-<section class="max-w-3xl mx-auto px-6 lg:px-10 py-20">
-  <p class="eyebrow mb-4">About</p>
-  <h1 class="text-4xl sm:text-5xl mb-10">{{ author.name|default:"About the Author" }}</h1>
+<section class="about-author-page" aria-labelledby="about-author-title">
+  <div class="about-author-page__intro">
+    <p class="about-author-page__eyebrow">About the author</p>
+    <h1 id="about-author-title">The heart behind the library</h1>
+    <div class="about-author-page__ornament" aria-hidden="true"><span></span><span></span></div>
+  </div>
 
-  <div class="grid sm:grid-cols-[200px_1fr] gap-10 items-start">
-    {% if author.photo %}
-      <img src="{{ author.photo.url }}" alt="{{ author.name }}" class="w-full rounded-sm shadow-[0_18px_35px_-15px_rgba(90,27,30,0.35)]">
-    {% endif %}
-    <div class="prose prose-lg text-ink-muted font-body leading-relaxed">
-      {{ author.bio|linebreaks }}
+  <div class="about-author-page__story">
+    <div class="about-author-page__portrait-wrap">
+      {% if author and author.photo %}
+        <img src="{{ author.photo.url }}" alt="Portrait of {{ author.name }}" class="about-author-page__portrait">
+      {% else %}
+        <div class="about-author-page__portrait about-author-page__portrait--placeholder" role="img" aria-label="Author portrait placeholder">
+          <span class="about-author-page__portrait-initial">{{ author.name|default:"L"|slice:':1' }}</span>
+          <span class="about-author-page__portrait-caption">Author portrait</span>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="about-author-page__copy">
+      <p class="about-author-page__lead">
+        The Living Word Library was born from a simple conviction: Scripture is not meant to be studied from a distance. It is meant to be lived in, walked with, and heard as the voice of a God who is still speaking today.
+      </p>
+      <p>
+        Every book in this library carries a thread of personal encounter. Each page is the fruit of quiet mornings in the Word, long seasons of waiting, and the steady faithfulness of a God whose names, promises, and wisdom hold up under the full weight of real life.
+      </p>
+      <p>
+        These books are written for the reader in the middle of it — the one raising children, tending a marriage, building a household, seeking direction, waiting on a prayer, or simply longing to know Him more.
+      </p>
+      {% if author and author.bio %}
+        <div class="about-author-page__bio">
+          <p class="about-author-page__bio-label">{{ author.name }}</p>
+          {{ author.bio|linebreaks }}
+        </div>
+      {% else %}
+        <p class="about-author-page__placeholder">[ Author bio placeholder — add the finalized About the Author bio in the admin. ]</p>
+      {% endif %}
     </div>
   </div>
 </section>

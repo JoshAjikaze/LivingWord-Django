@@ -115,3 +115,84 @@
     image-rendering: pixelated;
   }
 }
+
+
+@layer components {
+  .about-author-page {
+    @apply min-h-[calc(100vh-8rem)] px-6 py-20 sm:px-10 lg:px-16 lg:py-24;
+    background: #fbf4e8;
+  }
+  .about-author-page__intro {
+    @apply mx-auto max-w-5xl text-center;
+  }
+  .about-author-page__eyebrow {
+    @apply font-sans text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-gold-dark;
+  }
+  .about-author-page__intro h1 {
+    @apply mt-4 text-4xl font-normal leading-tight tracking-[-0.02em] sm:text-5xl lg:text-[3.15rem];
+  }
+  .about-author-page__ornament {
+    @apply mt-7 flex justify-center gap-3;
+  }
+  .about-author-page__ornament span {
+    @apply block h-px w-10 bg-gold/70;
+  }
+  .about-author-page__story {
+    @apply mx-auto mt-14 grid max-w-5xl items-start gap-12 lg:mt-16 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-24;
+  }
+  .about-author-page__portrait-wrap {
+    @apply mx-auto w-full max-w-[320px] lg:mx-0;
+  }
+  .about-author-page__portrait {
+    @apply aspect-[4/5] w-full rounded-[4px] object-cover shadow-[0_24px_40px_-20px_rgba(90,27,30,0.4)];
+  }
+  .about-author-page__portrait--placeholder {
+    @apply relative flex flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-[#d9b578] via-[#f2d8a4] to-[#9a6b4d] text-wine;
+  }
+  .about-author-page__portrait--placeholder::before,
+  .about-author-page__portrait--placeholder::after {
+    content: "";
+    @apply absolute rounded-full border border-white/35;
+  }
+  .about-author-page__portrait--placeholder::before {
+    @apply h-52 w-52 -translate-y-8 bg-white/15;
+  }
+  .about-author-page__portrait--placeholder::after {
+    @apply h-80 w-80 translate-y-32 bg-wine/10;
+  }
+  .about-author-page__portrait-initial {
+    @apply relative z-10 font-display text-[8rem] leading-none text-white/85;
+  }
+  .about-author-page__portrait-caption {
+    @apply relative z-10 mt-5 font-sans text-[0.62rem] font-semibold uppercase tracking-[0.25em] text-white/80;
+  }
+  .about-author-page__copy {
+    @apply max-w-2xl font-body text-[1rem] leading-[1.85] text-ink-muted sm:text-[1.05rem];
+  }
+  .about-author-page__copy p + p {
+    @apply mt-7;
+  }
+  .about-author-page__lead::first-letter {
+    @apply float-left mr-2 mt-1 font-display text-6xl leading-[0.72] text-gold-dark;
+  }
+  .about-author-page__bio {
+    @apply mt-8 border-l border-gold/60 pl-5 text-sm leading-relaxed text-ink-muted;
+  }
+  .about-author-page__bio-label {
+    @apply mb-2 font-sans text-xs font-semibold uppercase tracking-[0.18em] text-wine;
+  }
+  .about-author-page__placeholder {
+    @apply mt-8 font-body text-sm italic text-ink-muted/80;
+  }
+  @media (max-width: 639px) {
+    .about-author-page {
+      @apply py-14;
+    }
+    .about-author-page__story {
+      @apply mt-10 gap-9;
+    }
+    .about-author-page__portrait-wrap {
+      @apply max-w-[280px];
+    }
+  }
+}
