@@ -41,6 +41,12 @@ class BookAdmin(ModelAdmin):
         "qr_download",
     )
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        for field_name in ("ebook_file", "sample_excerpt"):
+            form.base_fields[field_name].widget.attrs["accept"] = ".pdf,.epub,application/pdf,application/epub+zip"
+        return form
+
     fieldsets = (
         ("Book identity", {
             "fields": ("title", "slug", "author_name", "isbn", "status", "published_at"),

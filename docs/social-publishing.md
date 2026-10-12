@@ -54,7 +54,7 @@ python3 manage.py process_social_queue --limit 20
 A cron example that runs every minute is:
 
 ```cron
-* * * * * cd /srv/livingword && /srv/venv/bin/python manage.py process_social_queue --limit 20 >> /var/log/livingword-social.log 2>&1
+* * * * * cd /srv/john11 && /srv/venv/bin/python manage.py process_social_queue --limit 20 >> /var/log/john11-social.log 2>&1
 ```
 
 Each delivery is independently tracked as `QUEUED`, `PUBLISHING`, `SUCCESS`, or `FAILED`. Failed deliveries record the provider response and receive exponential retry delays. The admin action **Retry selected failed deliveries now** resets a failed delivery to the queue.

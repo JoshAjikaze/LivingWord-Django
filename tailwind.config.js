@@ -7,29 +7,26 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Warm parchment background family
+        // Monochrome editorial palette. Semantic names remain for template compatibility.
         parchment: {
-          DEFAULT: "#FBF0DE",
-          light: "#FDF6EA",
-          deep: "#F5E6C8",
+          DEFAULT: "#FFFFFF",
+          light: "#FFFFFF",
+          deep: "#F5F5F5",
         },
-        // Primary ink / maroon — headings, primary buttons
         wine: {
-          DEFAULT: "#5A1B1E",
-          dark: "#411214",
-          light: "#7A2C2F",
+          DEFAULT: "#111111",
+          dark: "#000000",
+          light: "#333333",
         },
-        // Gold/amber — secondary CTAs, "stay connected" accents
         gold: {
-          DEFAULT: "#C68A2E",
-          dark: "#A8721E",
-          light: "#E0AE5C",
+          DEFAULT: "#777777",
+          dark: "#444444",
+          light: "#AAAAAA",
         },
-        // Deep navy — used sparingly (e.g. third book's cover treatment)
-        indigo_accent: "#1F3A5F",
+        indigo_accent: "#111111",
         ink: {
-          DEFAULT: "#3A2E24", // body text
-          muted: "#6B5D4F",   // secondary text
+          DEFAULT: "#111111",
+          muted: "#666666",
         },
       },
       fontFamily: {

@@ -3,7 +3,7 @@ Usage: {% include "books/_book_card.html" with book=book %}
 Expects a Book instance with: title, slug, short_description, cover_image
 {% endcomment %}
 <a href="{% url 'books:detail' book.slug %}" class="book-card group">
-  <div class="book-card__cover mb-4">
+  <div class="book-card__cover mb-3">
     {% if book.cover_image %}
       <img
         src="{{ book.cover_image.url }}"
@@ -12,21 +12,21 @@ Expects a Book instance with: title, slug, short_description, cover_image
         class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
       >
     {% else %}
-      <div class="w-full h-full flex items-center justify-center text-ink-muted text-sm">
+      <div class="flex h-full w-full items-center justify-center bg-black/[0.03] px-3 text-center font-sans text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-ink-muted">
         Cover coming soon
       </div>
     {% endif %}
   </div>
 
-  <h3 class="font-display text-xl text-wine group-hover:text-wine-dark transition-colors">
+  <h3 class="font-sans text-[0.78rem] font-extrabold uppercase leading-tight tracking-[0.02em] text-wine transition-colors group-hover:text-wine-dark sm:text-sm">
     {{ book.title }}
   </h3>
-  <p class="text-sm text-ink-muted mt-1">
+  <p class="mt-1.5 line-clamp-2 font-sans text-[0.68rem] leading-relaxed text-ink-muted sm:text-xs">
     {{ book.short_description }}
   </p>
 
   {% if book.status == "restricted" %}
-    <span class="mt-2 inline-block text-xs font-sans font-semibold text-gold-dark">
+    <span class="mt-2 inline-block font-sans text-[0.62rem] font-bold uppercase tracking-wide text-ink-muted">
       Currently unavailable
     </span>
   {% endif %}

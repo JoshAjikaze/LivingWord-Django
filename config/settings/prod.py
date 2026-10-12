@@ -8,6 +8,9 @@ RENDER_EXTERNAL_HOSTNAME = env("RENDER_EXTERNAL_HOSTNAME", default=None)
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
     CSRF_TRUSTED_ORIGINS = [f"https://{RENDER_EXTERNAL_HOSTNAME}"]
+    # QR codes must never keep the development localhost origin after deploy.
+    if PUBLIC_SITE_URL.startswith(("http://localhost", "http://127.0.0.1")):
+        PUBLIC_SITE_URL = f"https://{RENDER_EXTERNAL_HOSTNAME}"
 
 SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

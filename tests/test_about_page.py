@@ -15,7 +15,7 @@ class AboutPageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "The heart behind the library")
         self.assertContains(response, "About the author")
-        self.assertContains(response, "The Living Word Library was born from a simple conviction")
+        self.assertContains(response, "John 1:1 Library was born from a simple conviction")
         self.assertContains(response, "about-author-page__story")
 
     def test_about_page_renders_author_profile_when_available(self):

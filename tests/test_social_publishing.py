@@ -11,7 +11,7 @@ class SocialPublishingTests(TestCase):
         self.user = User.objects.create_superuser(email="social-admin@example.com", password="SecureP@ss1", name="Social Admin")
         self.account = SocialAccount.objects.create(
             platform=SocialAccount.Platform.X,
-            name="LivingWord X",
+            name="John 1:1 X",
             external_id="x-user-1",
             connected_by=self.user,
         )
@@ -30,7 +30,7 @@ class SocialPublishingTests(TestCase):
             validate_post(post, self.account)
 
     def test_enqueue_creates_one_delivery_per_active_account(self):
-        post = SocialPost.objects.create(body="A new LivingWord release.", created_by=self.user)
+        post = SocialPost.objects.create(body="A new John 1:1 release.", created_by=self.user)
         post.accounts.add(self.account)
         enqueue_post(post)
         post.refresh_from_db()

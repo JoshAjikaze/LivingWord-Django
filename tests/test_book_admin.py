@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from pathlib import Path
@@ -22,8 +23,20 @@ class BookAdminUploadTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'name="ebook_file"')
         self.assertContains(response, 'name="sample_excerpt"')
+        self.assertContains(response, 'accept=".pdf,.epub,application/pdf,application/epub+zip"')
         self.assertContains(response, "Amazon store URL")
         self.assertContains(response, "ISBN")
+
+    def test_book_model_rejects_non_ebook_extensions(self):
+        book = Book(
+            title="Invalid Upload Book",
+            slug="invalid-upload-book",
+            short_description="Invalid upload test.",
+            description="Book description.",
+            ebook_file=SimpleUploadedFile("book.txt", b"not an ebook", content_type="text/plain"),
+        )
+        with self.assertRaises(ValidationError):
+            book.full_clean()
 
     def test_admin_can_create_book_with_pdf_and_excerpt(self):
         cover_path = Path(__file__).parent / "shots" / "home.png"

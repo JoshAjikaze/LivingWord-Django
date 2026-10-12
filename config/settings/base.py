@@ -120,7 +120,7 @@ ACCOUNT_UNIQUE_EMAIL = True
 # Temporary policy: do not require email verification during signup/login.
 # Change to "mandatory" when SMTP and the production verification flow are ready.
 ACCOUNT_EMAIL_VERIFICATION = env("ACCOUNT_EMAIL_VERIFICATION", default="none")
-ACCOUNT_EMAIL_SUBJECT_PREFIX = "[LivingWord Library] "
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[John 1:1 Library] "
 ACCOUNT_ADAPTER = "apps.accounts.adapters.CustomAccountAdapter"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USER_MODEL_EMAIL_FIELD = "email"
@@ -199,8 +199,8 @@ if USE_S3:
 
 # --- Unfold admin theme ---
 UNFOLD = {
-    "SITE_TITLE": "The Living Word Library — Admin",
-    "SITE_HEADER": "The Living Word Library",
+    "SITE_TITLE": "John 1:1 Library — Admin",
+    "SITE_HEADER": "John 1:1 Library",
     "SITE_SYMBOL": "auto_stories",
     "SITE_LOGO": {
         "light": lambda request: static("images/livingword-logo.png"),
