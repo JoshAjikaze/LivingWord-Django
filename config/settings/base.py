@@ -125,6 +125,22 @@ ACCOUNT_ADAPTER = "apps.accounts.adapters.CustomAccountAdapter"
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 ACCOUNT_USER_MODEL_EMAIL_FIELD = "email"
 
+# --- Email delivery ---
+# Keep SMTP configuration environment-driven so local development can use
+# Gmail (or the console backend) without falling back to localhost:25.
+EMAIL_HOST = env("EMAIL_HOST", default="")
+EMAIL_PORT = env.int("EMAIL_PORT", default=587)
+EMAIL_USE_TLS = env.bool("EMAIL_USE_TLS", default=True)
+EMAIL_USE_SSL = env.bool("EMAIL_USE_SSL", default=False)
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="")
+DEFAULT_FROM_EMAIL = env(
+    "DEFAULT_FROM_EMAIL",
+    default="John 1:1 Library <noreply@example.com>",
+)
+SERVER_EMAIL = env("SERVER_EMAIL", default=EMAIL_HOST_USER or "noreply@example.com")
+EMAIL_TIMEOUT = env.int("EMAIL_TIMEOUT", default=20)
+
 LOGIN_URL = "account_login"
 LOGIN_REDIRECT_URL = "account:profile"
 LOGOUT_REDIRECT_URL = "core:home"
