@@ -7,3 +7,4 @@ __pycache__/
 media/
 staticfiles/
 node_modules
+.env.example
